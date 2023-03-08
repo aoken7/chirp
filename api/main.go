@@ -1,7 +1,7 @@
 package main
 
 import (
-	"net/http"
+	"chirp/routers"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -13,11 +13,7 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/", hello)
+	routers.Setup(e)
 
 	e.Logger.Fatal(e.Start(":80"))
-}
-
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
 }
