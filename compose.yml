@@ -8,3 +8,34 @@ services:
     volumes:
       - ./api:/app/
     command: sh -c "reflex -r '(\.go$$|go\.mod)' -s go run main.go"
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: chirp
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: chirp
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+        - PMA_ARBITRARY=1
+        - PMA_HOST=mysql
+        - PMA_USER=admin
+        - PMA_PASSWORD=admin
+    links:
+        - mysql
+    ports:
+        - 8888:80

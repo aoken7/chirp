@@ -1,6 +1,7 @@
 package main
 
 import (
+	"chirp/database"
 	"chirp/routers"
 
 	"github.com/labstack/echo/v4"
@@ -8,6 +9,8 @@ import (
 )
 
 func main() {
+	database.Connect()
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
