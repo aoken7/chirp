@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	database.Connect()
+	database.Init()
 
 	e := echo.New()
 

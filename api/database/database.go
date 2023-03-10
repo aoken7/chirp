@@ -1,6 +1,8 @@
 package database
 
 import (
+	"chirp/models"
+	"context"
 	"database/sql"
 	"os"
 	"time"
@@ -13,7 +15,7 @@ import (
 
 var DB *bun.DB
 
-func Connect() {
+func Init() {
 	config := mysql.Config{
 		DBName:    os.Getenv("MYSQL_DATABASE"),
 		User:      os.Getenv("MYSQL_USER"),
@@ -31,8 +33,15 @@ func Connect() {
 	}
 
 	DB := bun.NewDB(mysql, mysqldialect.New())
+
+	//実行したクエリを標準出力してくれる
 	DB.AddQueryHook(bundebug.NewQueryHook(
 		bundebug.WithVerbose(true),
 		bundebug.FromEnv("BUNDEBUG"),
 	))
+
+	_, err = DB.NewCreateTable().Model((*models.User)(nil)).IfNotExists().Exec(context.Background())
+	if err != nil {
+		panic(err)
+	}
 }
